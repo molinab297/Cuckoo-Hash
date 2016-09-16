@@ -12,7 +12,7 @@ For more info on the algorithm - https://en.wikipedia.org/wiki/Cuckoo_hashing
 
 Version 1.1
 - added support for templates; can now hash strings, chars, and ints
-- support 
+- added custom iterator which can used to traverse the map
 
 
 Version 1.0
