@@ -47,7 +47,7 @@ public:
      * Use this class to iterate through the hash table. */
     class iterator {
     public:
-        iterator(Type* init = 0 ) : current(init) {}
+        iterator(Type* init = 0) : current(init) {}
         Type& operator*() { return *current; } // dereference
         const Type& operator*() const { return current->data; }
         iterator& operator++() { // prefix
@@ -71,13 +71,19 @@ private:
     Type *table_one;
     Type *table_two;
 
-    HashFunction f; // hash function for table 1
-    HashFunction g; // hash function for table 2
+    HashFunction<Type> f; // hash function for table 1
+    HashFunction<Type> g; // hash function for table 2
 
     int tableCapacity;
     int tableSize;
 
-    void initializeTable(Type ar[], const int SIZE);
+    void initializeTable(int ar[], const int SIZE);
+    void initializeTable(std::string ar[], const int SIZE);
+    void initializeTable(char ar[], const int SIZE);
+    bool isEmpty(const int ar[], const int index);
+    bool isEmpty(const std::string ar[], const int index);
+    bool isEmpty(const char ar[], const int index);
+
 };
 
 
@@ -133,7 +139,7 @@ void CuckooTable<Type>::insert(Type key)
         while(loopCount < 16 && !found)
         {
             // if index at table 1 is empty, insert key
-            if(table_one[f.getHash(key)] == 0)
+            if(isEmpty(table_one, f.getHash(key)))
             {
                 table_one[f.getHash(key)] = key;
                 found = true;
@@ -148,7 +154,7 @@ void CuckooTable<Type>::insert(Type key)
                 key = evictedValue;
 
                 // if index at table 2 is empty, insert key
-                if(table_two[g.getHash(key)] == 0)
+                if(isEmpty(table_two, g.getHash(key)))
                 {
                     table_two[g.getHash(key)] = key;
                     found = true;
@@ -195,13 +201,31 @@ int CuckooTable<Type>::size() const {
     return tableSize;
 }
 
-template<class Type>
-void CuckooTable<Type>::initializeTable(Type ar[], const int SIZE)
-{
-    for(int i = 0; i < SIZE; i++)
-    {
-        ar[i] = 0;
-    }
-}
+
+template<>
+void CuckooTable<int>::initializeTable(int ar[], const int SIZE)
+{  for(int i = 0; i < SIZE; i++) { ar[i] = 0; } }
+
+template<>
+void CuckooTable<std::string>::initializeTable(std::string ar[], const int SIZE)
+{ for(int i = 0; i < SIZE; i++) { ar[i] = " "; } }
+
+template<>
+void CuckooTable<char>::initializeTable(char ar[], const int SIZE)
+{ for(int i = 0; i < SIZE; i++) { ar[i] = ' '; } }
+
+template<>
+bool CuckooTable<int>::isEmpty(const int ar[], const int index)
+{ if(ar[index] == 0) return true; else return false; }
+
+template<>
+bool CuckooTable<std::string>::isEmpty(const std::string ar[], const int index)
+{ if(ar[index] == " ") return true; else return false; }
+
+template<>
+bool CuckooTable<char>::isEmpty(const char ar[], const int index)
+{ if(ar[index] == ' ') return true; else return false; }
+
+
 
 #endif //CUCKOOHASH_CUCKOOTABLE_H
