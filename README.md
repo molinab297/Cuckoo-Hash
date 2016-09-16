@@ -8,7 +8,7 @@ It applies the idea of multiple-choice and relocation together and guarantees O(
 
 For more info on the algorithm - https://en.wikipedia.org/wiki/Cuckoo_hashing
 
-# ChangeLong
+# Change Log
 
 Version 1.1
 - added support for templates; can now hash strings, chars, and ints
